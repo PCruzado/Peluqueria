@@ -102,23 +102,35 @@ export default function BookingFlow({
   const canBook = !!form.firstName.trim() && !!form.lastName.trim() && phoneOk && !loading;
 
   const primaryBtn =
-    'h-13 w-full rounded-xl bg-ink px-4 py-3.5 text-base font-semibold text-white transition-colors hover:bg-moss disabled:bg-line disabled:text-muted';
-  const backBtn = 'mb-4 text-sm font-medium text-muted underline underline-offset-4';
+    'h-13 w-full rounded-2xl bg-[#C05621] hover:bg-[#A84717] active:scale-[0.99] px-4 py-3.5 text-base font-bold text-white shadow-lg shadow-[#C05621]/25 hover:shadow-xl hover:shadow-[#C05621]/35 transition-all disabled:bg-[#E2D6C5] disabled:text-[#9A8D7E] disabled:shadow-none disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2';
+  const backBtn =
+    'mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#8C3D15] hover:text-[#C05621] transition-colors cursor-pointer';
 
-  const SlotGroup = ({ title, items }: { title: string; items: string[] }) =>
+  const SlotGroup = ({
+    title,
+    icon,
+    items,
+  }: {
+    title: string;
+    icon: string;
+    items: string[];
+  }) =>
     items.length === 0 ? null : (
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted">{title}</h3>
+        <h3 className="mb-2.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#6E6356]">
+          <span>{icon}</span>
+          <span>{title}</span>
+        </h3>
         <div className="grid grid-cols-4 gap-2">
           {items.map((s) => (
             <button
               key={s}
               onClick={() => setSlot(s)}
               aria-pressed={slot === s}
-              className={`rounded-xl border py-2.5 text-[15px] font-medium transition-colors ${
+              className={`rounded-xl border py-2.5 text-[15px] font-bold transition-all cursor-pointer ${
                 slot === s
-                  ? 'border-ink bg-lemon font-bold text-ink'
-                  : 'border-line bg-white hover:border-ink'
+                  ? 'border-2 border-[#C05621] bg-[#C05621] text-white shadow-md shadow-[#C05621]/25 scale-[1.02]'
+                  : 'border-[#DFD5C7] bg-white text-[#241D17] hover:border-[#C05621] hover:bg-[#FBF6EE] shadow-xs'
               }`}
             >
               {fmtTime(s)}
@@ -131,23 +143,36 @@ export default function BookingFlow({
   /* ---------- Turno confirmado ---------- */
   if (step === 'done')
     return (
-      <section className="px-5 pb-12 pt-10">
-        <div className="grid h-16 w-16 place-items-center rounded-full bg-lemon">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#12261f"
-               strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <section className="px-5 pb-12 pt-9">
+        <div className="grid h-16 w-16 place-items-center rounded-2xl bg-[#FDF3EB] border-2 border-[#F1BF9E] shadow-xs">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#C05621"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
             <path d="m5 12 5 5 9-10" />
           </svg>
         </div>
-        <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight">Turno confirmado</h2>
-        <div className="mt-5 rounded-xl border border-line bg-white p-4">
-          <p className="font-display text-xl font-bold">{service!.name}</p>
-          <p className="mt-1 capitalize text-muted">{longDay(slot!)}</p>
-          <p className="font-display text-3xl font-extrabold">{fmtTime(slot!)} hs</p>
+        <h2 className="mt-5 font-display text-3xl font-extrabold tracking-tight text-[#241D17]">
+          ¡Turno confirmado!
+        </h2>
+        <div className="mt-5 rounded-2xl border border-[#E2D6C5] bg-white p-5 shadow-xs">
+          <p className="font-display text-xl font-bold text-[#241D17]">{service!.name}</p>
+          <p className="mt-1 capitalize text-sm font-semibold text-[#6E6356]">{longDay(slot!)}</p>
+          <p className="mt-2 font-display text-3xl font-extrabold text-[#C05621]">
+            {fmtTime(slot!)} hs
+          </p>
         </div>
-        <p className="mt-4 text-muted">
-          Te vamos a avisar por WhatsApp un día antes y unas horas antes del turno.
+        <p className="mt-4 text-sm text-[#6E6356] leading-relaxed">
+          Te vamos a avisar por WhatsApp un día antes y unas horas antes del turno con todos los detalles.
         </p>
-        <button onClick={reset} className={`${primaryBtn} mt-6`}>
+        <button onClick={reset} className={`${primaryBtn} mt-7`}>
           Reservar otro turno
         </button>
       </section>
@@ -160,38 +185,65 @@ export default function BookingFlow({
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className={`h-1.5 flex-1 rounded-full ${i <= STEP_INDEX[step] ? 'bg-ink' : 'bg-line'}`}
+            className={`h-1.5 flex-1 rounded-full transition-all ${
+              i <= STEP_INDEX[step] ? 'bg-[#C05621]' : 'bg-[#E2D6C5]'
+            }`}
           />
         ))}
       </div>
-      <p className="mb-5 mt-2 text-sm text-muted">Paso {STEP_INDEX[step] + 1} de 3</p>
+      <p className="mb-5 mt-2.5 text-xs font-bold uppercase tracking-wider text-[#8C3D15]">
+        Paso {STEP_INDEX[step] + 1} de 3
+      </p>
 
       {/* ---------- Paso 1: servicio ---------- */}
       {step === 'service' && (
         <>
-          <h2 className="font-display text-2xl font-extrabold tracking-tight">Elegí el servicio</h2>
+          <h2 className="font-display text-2xl font-extrabold tracking-tight text-[#241D17]">
+            Elegí el servicio
+          </h2>
           {services.length === 0 ? (
-            <p className="mt-4 text-muted">Todavía no hay servicios cargados.</p>
+            <div className="mt-4 rounded-2xl border border-[#E2D6C5] bg-white p-5 text-center text-[#6E6356]">
+              Todavía no hay servicios disponibles.
+            </div>
           ) : (
-            <ul className="mt-3 border-t border-line">
+            <div className="mt-4 space-y-2.5">
               {services.map((s) => (
-                <li key={s.id} className="border-b border-line">
-                  <button
-                    onClick={() => {
-                      setService(s);
-                      setStep('datetime');
-                    }}
-                    className="flex w-full items-center justify-between gap-4 px-1 py-4 text-left transition-colors hover:bg-white"
-                  >
-                    <span>
-                      <span className="block font-display text-xl font-bold leading-tight">{s.name}</span>
-                      <span className="text-sm text-muted">{s.duration_minutes} minutos</span>
+                <button
+                  key={s.id}
+                  onClick={() => {
+                    setService(s);
+                    setStep('datetime');
+                  }}
+                  className="group flex w-full items-center justify-between gap-4 rounded-2xl border border-[#E2D6C5] bg-white p-4.5 text-left shadow-xs transition-all hover:border-[#C05621] hover:bg-[#FDFBF7] hover:shadow-md active:scale-[0.99] cursor-pointer"
+                >
+                  <div>
+                    <span className="block font-display text-lg font-bold leading-tight text-[#241D17] group-hover:text-[#C05621] transition-colors">
+                      {s.name}
                     </span>
-                    <span className="font-display text-xl font-bold">{money(s.price_ars)}</span>
-                  </button>
-                </li>
+                    <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#6E6356] bg-[#F4EFE6] px-2 py-0.5 rounded-md">
+                      ⏱ {s.duration_minutes} min
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-display text-xl font-extrabold text-[#C05621]">
+                      {money(s.price_ars)}
+                    </span>
+                    <svg
+                      className="w-5 h-5 text-[#C05621] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </button>
               ))}
-            </ul>
+            </div>
           )}
         </>
       )}
@@ -200,14 +252,18 @@ export default function BookingFlow({
       {step === 'datetime' && (
         <>
           <button className={backBtn} onClick={() => setStep('service')}>
-            Cambiar servicio
+            <span>←</span>
+            <span>Cambiar servicio</span>
           </button>
-          <h2 className="font-display text-2xl font-extrabold tracking-tight">Elegí día y horario</h2>
-          <p className="mt-1 text-muted">
-            {service!.name}, {service!.duration_minutes} minutos
+          <h2 className="font-display text-2xl font-extrabold tracking-tight text-[#241D17]">
+            Elegí día y horario
+          </h2>
+          <p className="mt-1 text-sm text-[#6E6356]">
+            {service!.name} · <span className="font-semibold text-[#241D17]">{service!.duration_minutes} minutos</span>
           </p>
 
-          <div className="-mx-5 mt-4 flex snap-x gap-2 overflow-x-auto px-5 pb-2">
+          {/* Carrusel horizontal de días */}
+          <div className="-mx-5 mt-4 flex snap-x gap-2.5 overflow-x-auto px-5 pb-2 pt-1">
             {days.map((d, i) => {
               const ymd = toYmd(d);
               const active = date === ymd;
@@ -216,14 +272,24 @@ export default function BookingFlow({
                   key={ymd}
                   onClick={() => setDate(ymd)}
                   aria-pressed={active}
-                  className={`w-[3.9rem] shrink-0 snap-start rounded-xl border py-2.5 text-center transition-colors ${
-                    active ? 'border-ink bg-ink text-white' : 'border-line bg-white hover:border-ink'
+                  className={`w-[4.2rem] shrink-0 snap-start rounded-2xl border py-3 text-center transition-all cursor-pointer ${
+                    active
+                      ? 'border-2 border-[#C05621] bg-[#C05621] text-white shadow-md shadow-[#C05621]/25 scale-[1.03]'
+                      : 'border-[#DFD5C7] bg-white text-[#241D17] hover:border-[#C05621] hover:bg-[#FAF5EC] shadow-xs'
                   }`}
                 >
-                  <span className="block text-xs font-medium capitalize">
+                  <span
+                    className={`block text-[11px] font-bold uppercase tracking-wider ${
+                      active ? 'text-white/90' : 'text-[#6E6356]'
+                    }`}
+                  >
                     {i === 0 ? 'hoy' : weekdayShort(d)}
                   </span>
-                  <span className="block font-display text-2xl font-extrabold leading-tight">
+                  <span
+                    className={`block font-display text-2xl font-extrabold leading-tight ${
+                      active ? 'text-white' : 'text-[#241D17]'
+                    }`}
+                  >
                     {dayNumber(d)}
                   </span>
                 </button>
@@ -232,45 +298,61 @@ export default function BookingFlow({
           </div>
 
           <div className="mt-5 space-y-5" aria-live="polite">
-            {!date && <p className="text-muted">Elegí un día para ver los horarios.</p>}
-            {date && loading && <p className="text-muted">Buscando horarios…</p>}
+            {!date && (
+              <p className="text-sm text-[#6E6356] bg-white/70 border border-[#E2D6C5] rounded-xl p-3 text-center">
+                Elegí un día arriba para ver los horarios disponibles.
+              </p>
+            )}
+            {date && loading && (
+              <div className="flex items-center justify-center gap-2 py-4 text-sm text-[#6E6356]">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#C05621] border-t-transparent" />
+                <span>Buscando horarios disponibles…</span>
+              </div>
+            )}
 
             {date && !loading && mode === 'walk_in' && (
-              <div className="rounded-xl bg-lemon p-4 text-ink">
+              <div className="rounded-2xl border border-[#F1C18D] bg-[#FEF3E6] p-4 text-[#8C3D15] shadow-xs">
                 <p className="font-display text-lg font-bold">Ese día se atiende por orden de llegada</p>
-                <p className="mt-1 text-[15px]">
-                  No hace falta sacar turno. Pasá por el local en el horario de atención.
+                <p className="mt-1 text-sm text-[#8C3D15]/90">
+                  No hace falta sacar turno online: podés acercarte al local dentro del horario de atención.
                 </p>
               </div>
             )}
             {date && !loading && mode === 'closed' && (
-              <div className="rounded-xl border border-line bg-white p-4">
-                <p className="font-display text-lg font-bold">Ese día el local está cerrado</p>
-                <p className="mt-1 text-[15px] text-muted">Probá con otro día.</p>
+              <div className="rounded-2xl border border-[#E2D6C5] bg-white p-4 shadow-xs">
+                <p className="font-display text-lg font-bold text-[#241D17]">Ese día el local está cerrado</p>
+                <p className="mt-1 text-sm text-[#6E6356]">Probá seleccionando otro día en el calendario.</p>
               </div>
             )}
             {date && !loading && mode === 'online' && slots.length === 0 && (
-              <div className="rounded-xl border border-line bg-white p-4">
-                <p className="font-display text-lg font-bold">Ya no quedan horarios ese día</p>
-                <p className="mt-1 text-[15px] text-muted">Probá con otro día.</p>
+              <div className="rounded-2xl border border-[#E2D6C5] bg-white p-4 shadow-xs">
+                <p className="font-display text-lg font-bold text-[#241D17]">Ya no quedan horarios ese día</p>
+                <p className="mt-1 text-sm text-[#6E6356]">Probá seleccionando otro día disponible.</p>
               </div>
             )}
 
             {!loading && mode === 'online' && (
               <>
-                <SlotGroup title="Mañana" items={morning} />
-                <SlotGroup title="Tarde y noche" items={afternoon} />
+                <SlotGroup title="Mañana" icon="☀️" items={morning} />
+                <SlotGroup title="Tarde y noche" icon="🌙" items={afternoon} />
               </>
             )}
           </div>
 
           {error && (
-            <p role="alert" className="mt-4 text-[15px] font-medium text-alert">
+            <p role="alert" className="mt-4 text-[15px] font-semibold text-[#B91C1C]">
               {error}
             </p>
           )}
-          <button disabled={!slot} onClick={() => setStep('details')} className={`${primaryBtn} mt-6`}>
-            Continuar
+          <button disabled={!slot} onClick={() => setStep('details')} className={`${primaryBtn} mt-7`}>
+            <span>Continuar</span>
+            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+              <path
+                fillRule="evenodd"
+                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                clipRule="evenodd"
+              />
+            </svg>
           </button>
         </>
       )}
@@ -279,41 +361,47 @@ export default function BookingFlow({
       {step === 'details' && (
         <>
           <button className={backBtn} onClick={() => setStep('datetime')}>
-            Cambiar horario
+            <span>←</span>
+            <span>Cambiar horario</span>
           </button>
-          <h2 className="font-display text-2xl font-extrabold tracking-tight">Tus datos</h2>
+          <h2 className="font-display text-2xl font-extrabold tracking-tight text-[#241D17]">
+            Tus datos
+          </h2>
 
-          <div className="mt-3 flex items-center justify-between gap-4 rounded-xl border border-line bg-white p-4">
+          <div className="mt-3 flex items-center justify-between gap-4 rounded-2xl border border-[#E2D6C5] bg-white p-4.5 shadow-xs">
             <div>
-              <p className="font-display text-lg font-bold leading-tight">{service!.name}</p>
-              <p className="mt-0.5 text-sm capitalize text-muted">{longDay(slot!)}</p>
+              <p className="font-display text-lg font-bold leading-tight text-[#241D17]">{service!.name}</p>
+              <p className="mt-0.5 text-sm capitalize text-[#6E6356]">{longDay(slot!)}</p>
             </div>
             <div className="text-right">
-              <p className="font-display text-2xl font-extrabold leading-tight">{fmtTime(slot!)}</p>
-              <p className="text-sm text-muted">{money(service!.price_ars)}</p>
+              <p className="font-display text-2xl font-extrabold leading-tight text-[#C05621]">{fmtTime(slot!)}</p>
+              <span className="mt-0.5 inline-block text-xs font-bold text-[#8C3D15] bg-[#FDF3EB] px-2.5 py-0.5 rounded-md border border-[#F1BF9E]">
+                {money(service!.price_ars)}
+              </span>
             </div>
           </div>
 
           <div className="mt-5 space-y-4">
             {(
               [
-                { k: 'firstName', label: 'Nombre', type: 'text', mode: 'text', auto: 'given-name' },
-                { k: 'lastName', label: 'Apellido', type: 'text', mode: 'text', auto: 'family-name' },
-                { k: 'whatsapp', label: 'WhatsApp', type: 'tel', mode: 'tel', auto: 'tel-national' },
+                { k: 'firstName', label: 'Nombre', type: 'text', mode: 'text', auto: 'given-name', placeholder: 'Tu nombre' },
+                { k: 'lastName', label: 'Apellido', type: 'text', mode: 'text', auto: 'family-name', placeholder: 'Tu apellido' },
+                { k: 'whatsapp', label: 'WhatsApp', type: 'tel', mode: 'tel', auto: 'tel-national', placeholder: 'Ej: 3815551234' },
               ] as const
             ).map((f) => (
               <label key={f.k} className="block">
-                <span className="mb-1.5 block text-sm font-semibold">{f.label}</span>
+                <span className="mb-1.5 block text-sm font-bold text-[#241D17]">{f.label}</span>
                 <input
                   type={f.type}
                   inputMode={f.mode}
                   autoComplete={f.auto}
+                  placeholder={f.placeholder}
                   value={form[f.k]}
                   onChange={(e) => setForm({ ...form, [f.k]: e.target.value })}
-                  className="h-12 w-full rounded-xl border border-line bg-white px-4 text-base outline-none focus:border-ink focus:ring-2 focus:ring-ink/20"
+                  className="h-12 w-full rounded-xl border border-[#D5C9B8] bg-white px-4 text-base text-[#241D17] placeholder:text-[#9E9283] outline-none focus:border-[#C05621] focus:ring-3 focus:ring-[#C05621]/20 transition-all shadow-xs"
                 />
                 {f.k === 'whatsapp' && (
-                  <span className="mt-1.5 block text-sm text-muted">
+                  <span className="mt-1.5 block text-xs text-[#6E6356]">
                     Con código de área, sin 0 ni 15. Por ejemplo: 3815551234
                   </span>
                 )}
@@ -322,12 +410,19 @@ export default function BookingFlow({
           </div>
 
           {error && (
-            <p role="alert" className="mt-4 text-[15px] font-medium text-alert">
+            <p role="alert" className="mt-4 text-[15px] font-semibold text-[#B91C1C]">
               {error}
             </p>
           )}
-          <button onClick={confirm} disabled={!canBook} className={`${primaryBtn} mt-6`}>
-            {loading ? 'Reservando…' : 'Confirmar turno'}
+          <button onClick={confirm} disabled={!canBook} className={`${primaryBtn} mt-7`}>
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span>Reservando…</span>
+              </span>
+            ) : (
+              <span>Confirmar turno</span>
+            )}
           </button>
         </>
       )}

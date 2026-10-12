@@ -6,20 +6,22 @@ const display = Bricolage_Grotesque({ subsets: ['latin'], variable: '--font-bric
 const sans = Figtree({ subsets: ['latin'], variable: '--font-figtree' });
 
 export const metadata: Metadata = {
-  title: 'Reservá tu turno',
+  title: 'Turnos Peluquerías Tucumán',
   description: 'Sacá tu turno online en menos de un minuto.',
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#12261f',
+  themeColor: '#FAF7F2',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es-AR" className={`${display.variable} ${sans.variable}`}>
-      <body>{children}</body>
+      <body className="min-h-screen bg-[#FAF7F2] text-[#241D17] antialiased selection:bg-[#F1BF9E] selection:text-[#241D17]">
+        {children}
+      </body>
     </html>
   );
 }

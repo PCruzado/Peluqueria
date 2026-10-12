@@ -28,27 +28,27 @@ async function BarberContent({ slug }: { slug: string }) {
   const initial = barber.business_name.trim().charAt(0).toUpperCase();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md bg-mist sm:border-x sm:border-line">
-      <header className="bg-ink text-white">
+    <main className="mx-auto min-h-screen max-w-md bg-[#FAF7F2] sm:border-x sm:border-[#E2D6C5] shadow-xs">
+      <header className="bg-[#241D17] text-[#FAF7F2]">
         <div className="px-5 pb-8 pt-9">
           {barber.logo_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={barber.logo_url}
               alt={barber.business_name}
-              className="h-16 w-16 rounded-full object-cover ring-2 ring-lemon"
+              className="h-16 w-16 rounded-full object-cover ring-2 ring-[#E0834B] shadow-md"
             />
           ) : (
-            <div className="grid h-16 w-16 place-items-center rounded-full bg-lemon font-display text-3xl font-extrabold text-ink">
+            <div className="grid h-16 w-16 place-items-center rounded-full bg-[#C05621] font-display text-3xl font-extrabold text-white shadow-md">
               {initial}
             </div>
           )}
 
-          <h1 className="mt-6 break-words font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-tight">
+          <h1 className="mt-5 break-words font-display text-[2.5rem] font-extrabold leading-[1.02] tracking-tight text-[#FAF7F2]">
             {barber.business_name}
           </h1>
 
-          <div className="mt-4 flex flex-col gap-1.5 text-[15px] text-white/85">
+          <div className="mt-4 flex flex-col gap-1.5 text-[15px] text-[#DDD4C9]">
             {barber.address && (
               <a
                 href={
@@ -57,10 +57,18 @@ async function BarberContent({ slug }: { slug: string }) {
                 }
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-start gap-2 underline decoration-white/40 underline-offset-4"
+                className="inline-flex items-start gap-2 underline decoration-[#DDD4C9]/40 underline-offset-4 hover:text-white transition-colors"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     strokeWidth="2" className="mt-0.5 shrink-0" aria-hidden>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="mt-0.5 shrink-0 text-[#E0834B]"
+                  aria-hidden
+                >
                   <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" />
                   <circle cx="12" cy="10" r="2.5" />
                 </svg>
@@ -72,7 +80,7 @@ async function BarberContent({ slug }: { slug: string }) {
                 href={`https://instagram.com/${handle}`}
                 target="_blank"
                 rel="noreferrer"
-                className="underline decoration-white/40 underline-offset-4"
+                className="underline decoration-[#DDD4C9]/40 underline-offset-4 hover:text-white transition-colors"
               >
                 @{handle}
               </a>
@@ -99,7 +107,16 @@ export default async function BarberPage({
   const { slug } = await params;
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-ink text-white grid place-items-center">Cargando barbería...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#FAF7F2] text-[#241D17] grid place-items-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#C05621] border-t-transparent" />
+            <p className="text-sm font-semibold text-[#6E6356]">Cargando barbería…</p>
+          </div>
+        </div>
+      }
+    >
       <BarberContent slug={slug} />
     </Suspense>
   );
