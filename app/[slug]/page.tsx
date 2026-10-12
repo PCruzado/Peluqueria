@@ -1,14 +1,13 @@
 import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import BookingFlow from '@/components/booking/BookingFlow';
+import { Suspense } from 'react';
 
-export default async function BarberPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
+export async function generateStaticParams() {
+  return [{ slug: 'barberia-demo' }];
+}
 
+async function BarberContent({ slug }: { slug: string }) {
   const db = createAdminClient();
   const { data: barber } = await db
     .from('barbers')
@@ -89,5 +88,19 @@ export default async function BarberPage({
         maxDaysAhead={barber.max_days_ahead}
       />
     </main>
+  );
+}
+
+export default async function BarberPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-ink text-white grid place-items-center">Cargando barbería...</div>}>
+      <BarberContent slug={slug} />
+    </Suspense>
   );
 }
