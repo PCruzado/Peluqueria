@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ink: #12261f;
+  --color-moss: #1f3d33;
+  --color-lemon: #f3da4a;
+  --color-mist: #edf1ec;
+  --color-line: #d3dbd2;
+  --color-muted: #5b6b63;
+  --color-alert: #b3261e;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-mist);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Franja de poste de barbero */
+.pole {
+  height: 12px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-lemon) 0 12px,
+    var(--color-moss) 12px 24px,
+    #ffffff 24px 36px
+  );
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
